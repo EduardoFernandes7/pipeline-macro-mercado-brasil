@@ -1,0 +1,26 @@
+version: 2
+
+sources:
+  - name: bronze
+    schema: bronze
+    description: Raw tables written directly by load/load_to_duckdb.py (outside dbt).
+    tables:
+      - name: macro_indicators
+        description: Daily/monthly Banco Central (SGS) series, long format (date, series, value).
+        columns:
+          - name: date
+            tests: [not_null]
+          - name: series
+            tests: [not_null]
+          - name: value
+            tests: [not_null]
+
+      - name: market_prices
+        description: Daily OHLCV for 4 tracked B3 tickers, via yfinance/brapi.dev.
+        columns:
+          - name: date
+            tests: [not_null]
+          - name: ticker
+            tests: [not_null]
+          - name: close
+            tests: [not_null]

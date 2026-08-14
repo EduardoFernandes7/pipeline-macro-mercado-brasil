@@ -1,0 +1,23 @@
+name: "brazil_macro_markets"
+version: "1.0.0"
+config-version: 2
+
+profile: "brazil_macro_markets"
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  brazil_macro_markets:
+    silver:
+      +materialized: view
+      +schema: silver
+    gold:
+      +materialized: table
+      +schema: gold

@@ -1,0 +1,25 @@
+version: 2
+
+models:
+  - name: gold_macro_wide
+    description: One row per date with Selic, USD/BRL, and forward-filled IPCA.
+    columns:
+      - name: date
+        tests: [not_null, unique]
+
+  - name: gold_market_daily
+    description: Daily prices enriched with returns, moving averages, and ticker metadata.
+    columns:
+      - name: date
+        tests: [not_null]
+      - name: ticker
+        tests: [not_null]
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [date, ticker]
+
+  - name: gold_macro_market_correlation
+    description: >
+      Overall correlation between an equal-weighted 4-ticker B3 basket's daily
+      returns and macro indicators (not the real Ibovespa index -- see README).

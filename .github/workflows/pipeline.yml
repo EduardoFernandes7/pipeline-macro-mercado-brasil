@@ -1,0 +1,67 @@
+name: Pipeline
+
+on:
+  schedule:
+    # Weekdays, off the top of the hour (Actions cron is best-effort and
+    # busiest at :00/:30 UTC), after B3's close (21:15 UTC = 18:15 BRT).
+    - cron: "15 21 * * 1-5"
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: "pip"
+
+      - run: pip install -r requirements.txt
+
+      - name: Load bronze
+        run: python -m load.load_to_duckdb
+
+      - name: dbt build (silver + gold + tests)
+        working-directory: transform
+        run: |
+          dbt deps
+          dbt build
+
+      - name: Build static report
+        run: python -m report.build_dashboard
+
+      - name: Write status heartbeat
+        run: python -m status.write_status
+
+      - name: Commit status heartbeat
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update pipeline status heartbeat [skip ci]"
+          file_pattern: status/status.json status/badge.json
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

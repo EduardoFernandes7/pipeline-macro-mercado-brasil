@@ -1,0 +1,11 @@
+# Normally profiles.yml holds warehouse credentials and stays OUT of git
+# (kept in ~/.dbt/ instead). It's safe to commit here because DuckDB is just
+# a local file — there's no password or API key to leak, and committing it
+# means `dbt` works in CI with zero extra setup.
+brazil_macro_markets:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "../data/warehouse.duckdb"
+      threads: 4

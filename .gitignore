@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# DuckDB (rebuilt from source APIs on every run — see README)
+data/*.duckdb
+data/*.duckdb.wal
+
+# dbt
+transform/target/
+transform/dbt_packages/
+transform/logs/
+transform/.user.yml
+
+# Published report output (built by CI, not committed)
+site/*.html
+!site/.gitkeep
+
+# OS
+.DS_Store
+Thumbs.db
