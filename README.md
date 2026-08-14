@@ -78,17 +78,6 @@ cd transform && dbt deps && dbt build && cd ..
 python -m report.build_dashboard  # gera site/index.html
 python -m status.write_status
 ```
-
-## Roadmap do portfólio
-
-Este é o projeto 1 de 3 num portfólio de dados mais amplo, cada um combinando um tema diferente com uma stack diferente:
-
-| # | Tema | Foco | Stack |
-|---|------|------|-------|
-| 1 | Macro & mercado brasileiro (este repo) | Engenharia de Dados | Python, DuckDB, dbt, GitHub Actions, GitHub Pages |
-| 2 | Análise esportiva | Análise de Dados | Notebooks/Quarto, Plotly |
-| 3 | E-commerce/varejo | Cloud + BI | AWS/GCP free tier |
-
 ## Licença
 
 MIT — veja [LICENSE](LICENSE).
