@@ -46,14 +46,7 @@ Python · DuckDB · dbt-core + dbt-duckdb · Plotly · GitHub Actions · GitHub 
 
 **Nota**: não há uma fonte gratuita e sem cadastro para o índice Ibovespa real, então o dashboard usa uma "cesta B3" (média igualmente ponderada dos 4 ativos acompanhados) como proxy de mercado — deixado explícito no próprio relatório, não escondido.
 
-## Decisões técnicas (e os problemas reais que apareceram)
 
-- **yfinance quebrou em produção, ao vivo, durante a construção deste projeto** — todas as chamadas retornaram `YFRateLimitError`. A camada de fallback para `brapi.dev` foi o que manteve o pipeline funcionando; sem ela, o projeto simplesmente não teria dados de mercado.
-- **O fallback original (stooq.com) também não funcionou** — tinha ficado protegido por verificação anti-bot desde que a estratégia foi planejada. Troquei por `brapi.dev`, que é purpose-built para ativos da B3.
-- **Full-refresh idempotente em vez de carga incremental**: como as duas fontes devolvem o histórico completo de graça, reconstruir tudo do zero a cada execução é mais simples do que reconciliar dados novos com antigos, e foi validado rodando o pipeline duas vezes seguidas e comparando contagem de linhas.
-- **Forward-fill do IPCA com SQL portátil**: o IPCA só publica uma vez por mês; em vez de depender de uma função específica de um banco, o modelo `gold_macro_wide` usa uma contagem cumulativa como "grupo de preenchimento" — um padrão de SQL que funciona em qualquer engine com window functions.
-- **`generate_schema_name` customizado**: por padrão o dbt cria os schemas como `main_silver`/`main_gold` (concatenando com o schema alvo). Sobrescrevi a macro para usar o nome customizado como está — comportamento padrão documentado pelo próprio dbt Labs, mas fácil de não saber até esbarrar nele.
-- **Heartbeat de status commitado a cada execução** (`status/status.json` e `status/badge.json`): resolve dois problemas de uma vez — vira o badge de status acima, e por ser um push de verdade, reseta o contador de 60 dias que o GitHub usa para desativar workflows agendados por inatividade.
 
 ## Estrutura do repositório
 
