@@ -1,11 +1,11 @@
 {
-  "last_run_utc": "2026-11-11T01:14:17Z",
+  "last_run_utc": "2026-11-12T02:15:22Z",
   "tests_passed": 21,
   "tests_total": 21,
   "models_succeeded": 5,
   "models_total": 5,
   "row_counts": {
-    "gold_market_daily": 7824,
-    "gold_macro_wide": 2013
+    "gold_market_daily": 7828,
+    "gold_macro_wide": 2014
   }
 }
